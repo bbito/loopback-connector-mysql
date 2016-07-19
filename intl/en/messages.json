@@ -1,0 +1,20 @@
+{
+  "1092fa6c86f124928e0f4d9d4711ebc9": "options must be an object: {0}",
+  "66a6a44b45094ef45fdcb0201a26fc6d": "table is a required string argument: {0}",
+  "0ee9bced67962323e2a4a7dcf22edb78": "No arguments - could not create Enum.",
+  "80a32e80cbed65eba2103201a7c94710": "Model not found: {0}",
+  "1f442cf1bdb88dcda03e1b050f1e6136": "MySQL connection is failed: {0} {1}",
+  "1fede8f5b161a89aadc14bc9ba6a21d4": "Execute SQL within a transaction",
+  "2e025f8f55e541b343a4f1beab86ecba": "Data: {0}",
+  "3093daba96e1792757a246e3dc7b1512": "SQL: {0}, params: {1}",
+  "3425cfdb37c9242ba5cb5735c9a3199f": "MySQL regex syntax does not respect the `m` flag",
+  "412f29580c0c90dfb41b0433d8c498b6": "Error: {0}",
+  "590ad68e13b2702d21ed020e34b31927": "MySQL connection is established: {0}",
+  "610db3e4d1e877d985000ed09fb01fb9": "callback should be a function",
+  "85e942bc45f60258e3b4c74c8832ba38": "MySQL regex syntax does not respect the `g` flag",
+  "9d634e1a156dc0c1611eb4c3cff57276": "disconnect",
+  "b9ee009041644572fea0c496fbd77a41": "MySQL regex syntax does not respect the `i` flag",
+  "1046963e833c1170192bb35bb6119c46": "Commit a transaction",
+  "1c28badd26330a06828ef0776f3e75e9": "Begin a transaction with isolation level: {0}",
+  "fe5d032d99479765a986ac1196b7458b": "Rollback a transaction"
+}
