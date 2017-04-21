@@ -7,7 +7,7 @@
 require('./init.js');
 var assert = require('assert');
 
-var db, EnumModel, ANIMAL_ENUM;
+var db, BlobModel, EnumModel, ANIMAL_ENUM;
 var mysqlVersion;
 
 describe('MySQL specific datatypes', function() {
@@ -44,19 +44,14 @@ describe('MySQL specific datatypes', function() {
   });
 
   it('should fail spectacularly with invalid enum values', function(done) {
-    // TODO: with a default install of MySQL 5.7, these queries actually do fail and raise errors...
-    if (/^5\.7/.test(mysqlVersion)) {
-      assert.ok(mysqlVersion, 'skipping decimal/number test on mysql 5.7');
-      return done();
-    }
-    var em = EnumModel.create({animal: 'horse', condition: 'sleepy', mood: 'happy'}, function(err, obj) {
-      assert.ok(!err);
-      EnumModel.findById(obj.id, function(err, found) {
-        assert.ok(!err);
-        assert.equal(found.animal, ''); // MySQL fun.
-        assert.equal(found.animal, 0);
-        done();
-      });
+    // In MySQL 5.6/5.7, An ENUM value must be one of those listed in the column definition,
+    // or the internal numeric equivalent thereof. Invalid values are rejected.
+    // Reference: http://dev.mysql.com/doc/refman/5.7/en/constraint-enum.html
+    EnumModel.create({animal: 'horse', condition: 'sleepy', mood: 'happy'}, function(err, obj) {
+      assert.ok(err);
+      assert.equal(err.code, 'WARN_DATA_TRUNCATED');
+      assert.equal(err.errno, 1265);
+      done();
     });
   });
 
@@ -77,7 +72,20 @@ describe('MySQL specific datatypes', function() {
       });
     });
   });
-
+  it('should create a model instance with binary types', function(done) {
+    var str = 'This is a test';
+    var name = 'bob';
+    var bob = {name: name, bin: new Buffer.from(str)};
+    BlobModel.create(bob, function(err, obj) {
+      assert.ok(!err);
+      assert.equal(obj.bin.toString(), str);
+      BlobModel.findOne({where: {name: name}}, function(err, found) {
+        assert.ok(!err);
+        assert.equal(found.bin.toString(), str);
+        done();
+      });
+    });
+  });
   it('should disconnect when done', function(done) {
     db.disconnect();
     done();
@@ -98,7 +106,10 @@ function setup(done) {
     note: Object,
     extras: 'JSON',
   });
-
+  BlobModel = db.define('BlobModel', {
+    bin: {type: Buffer, dataType: 'blob', null: false},
+    name: {type: String},
+  });
   query('SELECT VERSION()', function(err, res) {
     mysqlVersion = res && res[0] && res[0]['VERSION()'];
     blankDatabase(db, done);
